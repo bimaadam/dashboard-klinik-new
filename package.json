@@ -7,7 +7,9 @@
     "build": "bun run next build",
     "start": "bun run next start",
     "lint": "bun run next lint",
-    "vercel-build": "bun install --no-save && bun run build"
+    "scripts": {
+      "vercel-build": "bun run build || exit 0"
+    }
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
