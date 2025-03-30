@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 
@@ -7,10 +6,8 @@ export const runtime = "nodejs"; // Pakai Node.js, bukan Edge
 
 export async function POST(req: NextRequest) {
   try {
-    // Parsing request body
     const { email, password } = await req.json();
 
-    // Validasi input
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email dan password harus diisi" },
@@ -18,15 +15,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    // Cek user di database
     const user = await prisma.user.findUnique({ where: { email } });
 
-    console.log("User dari DB:", user);
-
-    // Cek apakah user ada dan password cocok (TANPA bcryptjs)
     if (!user || user.password !== password) {
       return NextResponse.json(
         { error: "Email atau password salah" },
@@ -34,32 +24,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate token session
     const token = randomUUID();
 
-    // Hapus session lama sebelum buat yang baru
-    await prisma.session.deleteMany({
-      where: { userId: user.id },
-    });
+    await prisma.session.deleteMany({ where: { userId: user.id } });
 
-    // Buat session baru
     await prisma.session.create({
       data: {
         userId: user.id,
         token,
         createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 hari
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       },
     });
 
-    // Set cookie session
-    cookies().set("session_token", token, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 60 * 60 * 24, // 1 hari
-    });
+    // Pakai Response API biasa buat set-cookie, Next.js kadang error di cookies().set()
+    const response = NextResponse.json({ message: "Login berhasil!", token });
+    response.headers.set(
+      "Set-Cookie",
+      `session_token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24}`
+    );
 
-    return NextResponse.json({ message: "Login berhasil!", token });
+    return response;
   } catch (error) {
     console.error("Error di API login:", error);
     return NextResponse.json(
