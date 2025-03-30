@@ -8,7 +8,7 @@
     "start": "bun run next start",
     "lint": "bun run next lint",
     "scripts": {
-      "vercel-build": "bun run build || exit 0"
+      "vercel-build": "bun prisma generate && bun run build"
     }
   },
   "dependencies": {
