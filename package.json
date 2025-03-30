@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "bun run next dev",
-    "build": "NEXT_DISABLE_ESLINT=1 NEXT_DISABLE_TURBO=1 next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "prisma generate && NEXT_DISABLE_ESLINT=1 NEXT_DISABLE_TURBO=1 next build",
+    "start": "bun run next start"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
