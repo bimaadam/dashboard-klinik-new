@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; // Pastikan import ini benar!
 
 export const runtime = "nodejs"; // Pakai Node.js, bukan Edge
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const { email, password } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Cek user di database
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || user.password !== password) {
@@ -24,20 +26,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Buat session token
     const token = randomUUID();
 
+    // Hapus session lama
     await prisma.session.deleteMany({ where: { userId: user.id } });
 
+    // Simpan session baru
     await prisma.session.create({
       data: {
         userId: user.id,
         token,
         createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // Expired 1 hari
       },
     });
 
-    // Pakai Response API biasa buat set-cookie, Next.js kadang error di cookies().set()
+    // Response dengan Set-Cookie
     const response = NextResponse.json({ message: "Login berhasil!", token });
     response.headers.set(
       "Set-Cookie",
