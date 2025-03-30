@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { tambahLaporan } from "@/lib/api";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import {
+    Button,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    useDisclosure,
+} from "@nextui-org/react";
 
 const AddLaporan = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -19,25 +28,33 @@ const AddLaporan = () => {
         total: 0,
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+
         const newValue = ["jasa", "obat", "lain_lain", "tindakan", "lab", "nebu"].includes(name)
-            ? parseFloat(value.replace(/[^0-9]/g, "")) || 0
+            ? parseFloat(value.replace(/\D/g, "")) || 0
             : value;
 
-        const updatedFormData = {
-            ...formData,
-            [name]: newValue,
-        };
+        setFormData((prevData) => {
+            const updatedFormData = {
+                ...prevData,
+                [name]: newValue,
+            };
 
-        updatedFormData.total = updatedFormData.jasa + updatedFormData.obat + updatedFormData.lain_lain +
-            updatedFormData.tindakan + updatedFormData.lab + updatedFormData.nebu;
+            updatedFormData.total =
+                updatedFormData.jasa +
+                updatedFormData.obat +
+                updatedFormData.lain_lain +
+                updatedFormData.tindakan +
+                updatedFormData.lab +
+                updatedFormData.nebu;
 
-        setFormData(updatedFormData);
+            return updatedFormData;
+        });
     };
 
     const handleSubmit = async () => {
-        console.log("Data yang dikirim:", formData); // Debugging
+        console.log("Data yang dikirim:", formData);
         const response = await tambahLaporan(formData);
         if (response) {
             alert("Laporan berhasil ditambahkan!");
@@ -61,7 +78,6 @@ const AddLaporan = () => {
         }
     };
 
-
     return (
         <div>
             <Button onPress={onOpen} color="primary">
@@ -82,7 +98,7 @@ const AddLaporan = () => {
                                             name={key}
                                             value={
                                                 ["jasa", "obat", "lain_lain", "tindakan", "lab", "nebu", "total"].includes(key)
-                                                    ? `IDR ${formData[key].toLocaleString("id-ID")}`
+                                                    ? formData[key].toLocaleString("id-ID")
                                                     : formData[key]
                                             }
                                             onChange={handleChange}
@@ -96,10 +112,9 @@ const AddLaporan = () => {
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Batal
                                 </Button>
-                                <Button color="primary" onPress={(e) => handleSubmit(e)}>
+                                <Button color="primary" onPress={handleSubmit}>
                                     Simpan
                                 </Button>
-
                             </ModalFooter>
                         </>
                     )}
