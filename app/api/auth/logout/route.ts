@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+export const runtime = "nodejs";
 
 export async function POST() {
   const token = cookies().get("session_token")?.value;
