@@ -11,9 +11,17 @@ export async function POST() {
 
   try {
     await prisma.session.deleteMany({ where: { token } });
-    cookies().delete("session_token");
 
-    return NextResponse.json({ message: "Logged out" }, { status: 200 });
+    const response = NextResponse.json(
+      { message: "Logged out" },
+      { status: 200 }
+    );
+    response.headers.set(
+      "Set-Cookie",
+      "session_token=; Path=/; Max-Age=0; HttpOnly"
+    );
+
+    return response;
   } catch (error) {
     console.error("Logout Error:", error);
     return NextResponse.json({ error: "Failed to log out" }, { status: 500 });
