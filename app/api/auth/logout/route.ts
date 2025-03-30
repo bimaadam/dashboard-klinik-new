@@ -2,13 +2,23 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 
-export async function POST() {
-  const token = (await cookies()).get("session_token")?.value;
+export const runtime = "edge"; // Tambahin ini
 
-  if (token) {
-    await prisma.session.deleteMany({ where: { token } });
-    (await cookies()).delete("session_token");
+export async function POST() {
+  const token = cookies().get("session_token")?.value;
+
+  if (!token) {
+    return NextResponse.json({ error: "No session found" }, { status: 401 });
   }
 
-  return NextResponse.json({ message: "Logged out" });
+  await prisma.session.deleteMany({ where: { token } });
+
+  const response = NextResponse.redirect("/auth/login");
+
+  response.headers.set(
+    "Set-Cookie",
+    "session_token=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict"
+  );
+
+  return response;
 }
