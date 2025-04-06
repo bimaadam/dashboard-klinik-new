@@ -11,21 +11,16 @@ import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
 import useUserSession from "../hooks/usersession";
 
-const Chart = dynamic(
-  () => import("../charts/steam").then((mod) => mod.Steam),
-  {
-    ssr: false,
-  }
-);
+const Chart = dynamic(() => import("../charts/steam").then((mod) => mod.Steam), {
+  ssr: false,
+});
 
 export const Content = () => {
-  const session = useUserSession();
+  const { session, loading, error } = useUserSession();
 
-  if (!session) {
-    return <p>Loading session...</p>;
-  }
-
-  const { nama } = session;
+  if (loading) return <p>Loading session...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!session) return <p>No session found.</p>;
 
   return (
     <div className="h-full lg:px-6">
@@ -33,7 +28,7 @@ export const Content = () => {
         <div className="mt-6 gap-6 flex flex-col w-full">
           {/* Card Section Top */}
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-semibold">Hi {nama} 👋</h1>
+            <h1 className="text-3xl font-semibold">Hi {session.nama} 👋</h1>
             <h3 className="text-xl font-semibold">Available Balance</h3>
             <div className="grid md:grid-cols-2 grid-cols-1 2xl:grid-cols-3 gap-5 justify-center w-full">
               <CardBalance1 />
