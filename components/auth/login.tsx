@@ -11,6 +11,7 @@ import { LoginFormType } from "@/helpers/types";
 export const Login = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // 💫 Tambah loading state
 
   const initialValues: LoginFormType = {
     email: "",
@@ -19,6 +20,8 @@ export const Login = () => {
 
   const handleLogin = async (values: LoginFormType) => {
     setError(null);
+    setLoading(true); // 😼 Set loading on
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -29,6 +32,7 @@ export const Login = () => {
       if (!res.ok) {
         const errorData = await res.json();
         setError(errorData.error);
+        setLoading(false); // 🚫 Jangan lupa matikan loading
         return;
       }
 
@@ -39,6 +43,7 @@ export const Login = () => {
     } catch (err) {
       console.error("Login error:", err);
       setError("Terjadi kesalahan, coba lagi.");
+      setLoading(false); // ⛔ Matikan loading kalau error
     }
   };
 
@@ -69,8 +74,14 @@ export const Login = () => {
               errorMessage={errors.password}
               onChange={handleChange("password")}
             />
-            <Button onPress={() => handleSubmit()} variant="flat" color="primary">
-              Login
+            <Button
+              isDisabled={loading}
+              isLoading={loading}
+              onPress={() => handleSubmit()}
+              variant="flat"
+              color="primary"
+            >
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </div>
         )}
