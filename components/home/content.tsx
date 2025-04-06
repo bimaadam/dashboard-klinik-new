@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { TableWrapper } from "../table/table";
 import { CardBalance1 } from "./card-balance1";
@@ -10,7 +10,25 @@ import { CardTransactions } from "./card-transactions";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
 
-const user = "Admin"
+const [nama, setNama] = useState<string | null>(null);
+
+// Fetch nama user dari session
+useEffect(() => {
+  async function getSession() {
+    try {
+      const res = await fetch("/api/auth/session");
+      if (!res.ok) {
+        throw new Error("Gagal mengambil sesi");
+      }
+      const data = await res.json();
+      setNama(data.user.nama); // Simpan nama user
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  getSession();
+}, []);
 
 const Chart = dynamic(
   () => import("../charts/steam").then((mod) => mod.Steam),
@@ -25,7 +43,7 @@ export const Content = () => (
       <div className="mt-6 gap-6 flex flex-col w-full">
         {/* Card Section Top */}
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold">Hi {user} 👋</h1>
+          <h1 className="text-3xl font-semibold">Hi {nama} 👋</h1>
           <h3 className="text-xl font-semibold">Available Balance</h3>
           <div className="grid md:grid-cols-2 grid-cols-1 2xl:grid-cols-3 gap-5  justify-center w-full">
             <CardBalance1 />
