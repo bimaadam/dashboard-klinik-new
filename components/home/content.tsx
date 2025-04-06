@@ -18,7 +18,7 @@ const Chart = dynamic(() => import("../charts/steam").then((mod) => mod.Steam), 
 export const Content = () => {
   const { session, loading, error } = useUserSession();
 
-  if (loading) return <p>Loading session...</p>;
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!session) return <p>No session found.</p>;
 
