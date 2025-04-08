@@ -64,3 +64,14 @@ export async function hapusLaporan(id: number) {
     return false;
   }
 }
+
+export async function getGaji() {
+  try {
+    const res = await fetch(`${API_URL}/penggajian`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Gagal mengambil data gaji");
+    return await res.json();
+  } catch (err) {
+    console.error("Error:", err);
+    return [];
+  }
+}

@@ -52,49 +52,21 @@ export const SidebarWrapper = () => {
                 icon={<AccountsIcon />}
                 href="laporan"
               />
-              {/* <SidebarItem
-                isActive={pathname === "/payments"}
-                title="Payments"
+              <SidebarItem
+                isActive={pathname === "/penggajian"}
+                title="Penggajian"
                 icon={<PaymentsIcon />}
+                href="penggajian"
               />
-              <CollapseItems
-                icon={<BalanceIcon />}
-                items={["Banks Accounts", "Credit Cards", "Loans"]}
-                title="Balances"
-              />
-              <SidebarItem
-                isActive={pathname === "/customers"}
-                title="Customers"
-                icon={<CustomersIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/products"}
-                title="Products"
-                icon={<ProductsIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/reports"}
-                title="Reports"
-                icon={<ReportsIcon />}
-              />
+
             </SidebarMenu>
 
             <SidebarMenu title="General">
               <SidebarItem
-                isActive={pathname === "/developers"}
-                title="Developers"
-                icon={<DevIcon />}
-              />
-              <SidebarItem
-                isActive={pathname === "/view"}
-                title="View Test Data"
-                icon={<ViewIcon />}
-              />
-              <SidebarItem
                 isActive={pathname === "/settings"}
                 title="Settings"
                 icon={<SettingsIcon />}
-              /> */}
+              />
             </SidebarMenu>
 
             <SidebarMenu title="Updates">

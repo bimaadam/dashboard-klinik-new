@@ -25,9 +25,9 @@ export const NotificationsDropdown = () => {
               title: "text-base font-semibold",
             }}
             key="1"
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="jangan lewatkan notif dari CTO"
           >
-            📣 Edit your information
+            📣 Informasi dari IT CTO Bima Adam
           </DropdownItem>
           <DropdownItem
             key="2"
@@ -35,9 +35,9 @@ export const NotificationsDropdown = () => {
               base: "py-2",
               title: "text-base font-semibold",
             }}
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="Update terbaru dari IT CTO Bima Adam"
           >
-            🚀 Say goodbye to paper receipts!
+            🚀 Jangan lewatkan notif dari CTO
           </DropdownItem>
           <DropdownItem
             key="3"
@@ -45,9 +45,9 @@ export const NotificationsDropdown = () => {
               base: "py-2",
               title: "text-base font-semibold",
             }}
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="Informasi dari IT CTO Bima Adam"
           >
-            📣 Edit your information
+            📣 Informasi dalam beta test
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>
